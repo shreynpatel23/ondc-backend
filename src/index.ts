@@ -5,6 +5,7 @@ import http from "http";
 import bodyParser from "body-parser";
 import appConfig from "./config";
 import { callPostApi } from "./api";
+import ProductRoutes from "./routes/products.routes";
 
 const port = appConfig.port;
 const app: Application = express();
@@ -15,22 +16,10 @@ app.use(express.json());
 const server = http.createServer(app);
 
 app.get("/", async (_, res) => {
-  try {
-    const { data }: any = await callPostApi("/client/v1/search", {
-      context: {},
-      message: {
-        criteria: {
-          search_string: "coffee",
-          delivery_location: "12.903561,77.5939631",
-        },
-      },
-    });
-    res.status(200).json(data);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
-  }
+  res.send("UP");
 });
+
+app.use("/products", new ProductRoutes().getRouter());
 
 server.listen(port, () => {
   console.log(`server is running on ${port}`);
