@@ -30,6 +30,19 @@ export default class ProductRoutes implements Router {
       });
       res.status(status).send({ err, data });
     });
+
+    router.get("/on-search/:id", async (req, res) => {
+      const { id } = req.params;
+      if (typeof id !== "string")
+        return res
+          .status(400)
+          .send({ data: null, err: "Message id should be a string" });
+
+      const { err, status, data } = await this.productService.searchProduct({
+        message_id: id,
+      });
+      res.status(status).send({ err, data });
+    });
   }
 
   getRouter(): ExpressRouter {

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { IResponse, BadRequest, OkResponse } from "../commom/responses";
-import { callPostApi } from "../api";
+import { callPostApi, callGetApi } from "../api";
 
 export default class ProductService {
   // Get products by name
@@ -22,6 +22,19 @@ export default class ProductService {
           },
         },
       });
+      return OkResponse(data);
+    } catch (err) {
+      return BadRequest(err.message);
+    }
+  }
+
+  // on search product
+  async searchProduct(params: { message_id: string }): Promise<IResponse> {
+    if (!params.message_id) return BadRequest("Message id is required");
+    try {
+      const { data }: any = await callGetApi(
+        `/client/v1/on_search?messageId=${params.message_id}`
+      );
       return OkResponse(data);
     } catch (err) {
       return BadRequest(err.message);
